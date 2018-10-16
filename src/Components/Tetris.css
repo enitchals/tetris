@@ -1,0 +1,38 @@
+.tetris {
+    border: 2px solid black;
+    width: 200px;
+  }
+  
+  .tetris--title {
+    font-weight: bold;
+  }
+  
+  .tetris--cell {
+    height: 18px;
+    width: 18px;
+  }
+  
+  .tetris--cell--empty {
+    border: 1px solid white;
+  }
+  
+  .tetris--cell--red {
+    border: 1px solid black;
+    background: red;
+  }
+  
+  .tetris--cell--blue {
+    border: 1px solid black;
+    background: blue;
+  }
+  
+  .tetris--cell--green {
+    border: 1px solid black;
+    background: green;
+  }
+  
+  .tetris--row {
+    display: flex;
+    flex-direction: row;
+  }
+  
