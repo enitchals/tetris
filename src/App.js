@@ -43,7 +43,11 @@ export default class App extends React.Component {
       tetris[position[0]].splice(position[1], 1, "00");
     });
     newPositions.forEach(position => {
-      if (tetris[position[0]][position[1]] == "0D") this.stopDrop();
+      if (tetris[position[0]+1][position[1]].slice(1) == "D"){
+        tetris[position[0]].splice(position[1], 1, blockType);
+        this.stopDrop();
+        return;
+      }
       tetris[position[0]].splice(position[1], 1, blockType);
     });
     if (this.state.falling == true) this.setState({tetris});
@@ -57,7 +61,8 @@ export default class App extends React.Component {
     positions.forEach(position => {
       const blockType = tetris[position[0]][position[1]];
       const newBlockType = blockType.slice(0,1)+"D";
-      console.log(newBlockType);
+      tetris[position[0]].splice(position[1],1,newBlockType);
+      console.log(tetris);
     })
   }
 
