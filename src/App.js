@@ -79,10 +79,14 @@ export default class App extends React.Component {
       if (tetris[position[1]]<0) {
         canMove = false;
         return;
-      } else {if (tetris[position[0]][position[1]].slice(1) == "D") canMove = false}
-      if (canMove) {tetris[position[0]].splice(position[1], 1, this.state.blockType)}
+      } else {if (tetris[position[1]>=0]) {if (tetris[position[0]][position[1]].slice(1) == "D") canMove = false}}
     });
-    if (canMove) this.setState({tetris});
+    if (canMove){
+      newPositions.forEach(position => {
+        tetris[position[0]].splice(position[1], 1, this.state.blockType)
+      })
+      this.setState({tetris});
+    }
   }
 
   moveRight(){
@@ -99,11 +103,15 @@ export default class App extends React.Component {
       if (tetris[position[1]]>9){
         canMove = false;
         return;
-      } else {if (tetris[position[0]][position[1]].slice(1) == "D") canMove = false}
-      if (canMove){tetris[position[0]].splice(position[1], 1, this.state.blockType)}
+      } else {if (tetris[position[1]]<=9) {if (tetris[position[0]][position[1]].slice(1) == "D") canMove = false}}
     });
-    if (canMove) this.setState({tetris});
+    if (canMove){
+      newPositions.forEach(position => {
+        tetris[position[0]].splice(position[1], 1, this.state.blockType)
+      })
+    this.setState({tetris});
   }
+}
 
   gameOver(){
     clearInterval(this.state.timer);
