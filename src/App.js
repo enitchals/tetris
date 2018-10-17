@@ -79,7 +79,8 @@ export default class App extends React.Component {
       if (tetris[position[1]]<0) {
         canMove = false;
         return;
-      } else {if (tetris[position[1]>=0]) {if (tetris[position[0]][position[1]].slice(1) == "D") canMove = false}}
+      };
+      if (tetris[position[1]>=0]) {if (tetris[position[0]][position[1]].slice(1) == "D") canMove = false}
     });
     if (canMove){
       newPositions.forEach(position => {
@@ -103,7 +104,8 @@ export default class App extends React.Component {
       if (tetris[position[1]]>9){
         canMove = false;
         return;
-      } else {if (tetris[position[1]]<=9) {if (tetris[position[0]][position[1]].slice(1) == "D") canMove = false}}
+      };
+      if (tetris[position[1]]<=9) {if (tetris[position[0]][position[1]].slice(1) == "D") canMove = false}
     });
     if (canMove){
       newPositions.forEach(position => {
