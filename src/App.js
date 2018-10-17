@@ -14,6 +14,7 @@ export default class App extends React.Component {
       timer: null,
       score: 0,
       falling: true,
+      blockType: "1F",
     };
   }
 
@@ -34,7 +35,6 @@ export default class App extends React.Component {
   
   drop(){
     let positions = this.getPositions();
-    const blockType = this.state.tetris[positions[0][0]][positions[0][1]];
     const newPositions = positions.map(position => {
       return [position[0]+1, position[1]];
     })
@@ -44,11 +44,11 @@ export default class App extends React.Component {
     });
     newPositions.forEach(position => {
       if (tetris[position[0]+1][position[1]].slice(1) == "D"){
-        tetris[position[0]].splice(position[1], 1, blockType);
+        tetris[position[0]].splice(position[1], 1, this.state.blockType);
         this.stopDrop();
         return;
       }
-      tetris[position[0]].splice(position[1], 1, blockType);
+      tetris[position[0]].splice(position[1], 1, this.state.blockType);
     });
     if (this.state.falling == true) this.setState({tetris});
   }
@@ -59,8 +59,7 @@ export default class App extends React.Component {
     let positions = this.getPositions();
     const tetris = this.state.tetris;
     positions.forEach(position => {
-      const blockType = tetris[position[0]][position[1]];
-      const newBlockType = blockType.slice(0,1)+"D";
+      const newBlockType = this.state.blockType.slice(0,1)+"D";
       tetris[position[0]].splice(position[1],1,newBlockType);
       console.log(tetris);
     })
@@ -68,44 +67,42 @@ export default class App extends React.Component {
 
   moveLeft(){
     let positions = this.getPositions();
-    const blockType = this.state.tetris[positions[0][0]][positions[0][1]];
+    const tetris = this.state.tetris;
+    let canMove = true;
     const newPositions = positions.map(position => {
       return [position[0], position[1]-1];
     })
-    const tetris = this.state.tetris;
     positions.forEach(position => {
       tetris[position[0]].splice(position[1], 1, "00");
     });
     newPositions.forEach(position => {
-      if (tetris[position[0]+1][position[1]].slice(1) == "D"){
-        tetris[position[0]].splice(position[1], 1, blockType);
-        this.stopDrop();
+      if (tetris[position[1]]<0) {
+        canMove = false;
         return;
-      }
-      tetris[position[0]].splice(position[1], 1, blockType);
+      } else {if (tetris[position[0]][position[1]].slice(1) == "D") canMove = false}
+      if (canMove) {tetris[position[0]].splice(position[1], 1, this.state.blockType)}
     });
-    if (this.state.falling == true) this.setState({tetris});
+    if (canMove) this.setState({tetris});
   }
 
   moveRight(){
     let positions = this.getPositions();
-    const blockType = this.state.tetris[positions[0][0]][positions[0][1]];
+    const tetris = this.state.tetris;
+    let canMove = true;
     const newPositions = positions.map(position => {
       return [position[0], position[1]+1];
     })
-    const tetris = this.state.tetris;
     positions.forEach(position => {
       tetris[position[0]].splice(position[1], 1, "00");
     });
     newPositions.forEach(position => {
-      if (tetris[position[0]+1][position[1]].slice(1) == "D"){
-        tetris[position[0]].splice(position[1], 1, blockType);
-        this.stopDrop();
+      if (tetris[position[1]]>9){
+        canMove = false;
         return;
-      }
-      tetris[position[0]].splice(position[1], 1, blockType);
+      } else {if (tetris[position[0]][position[1]].slice(1) == "D") canMove = false}
+      if (canMove){tetris[position[0]].splice(position[1], 1, this.state.blockType)}
     });
-    if (this.state.falling == true) this.setState({tetris});
+    if (canMove) this.setState({tetris});
   }
 
   gameOver(){
@@ -129,16 +126,18 @@ export default class App extends React.Component {
   }
 
   handleKeyPress = (e) => {
-    console.log("hello");
     switch(e.keyCode){
       case 32:
         if (!this.state.go) this.go(this.state.timer);
         break;
-      case 37://left
+      case 37:
         this.moveLeft();
         break;
-      case 39://right
+      case 39:
         this.moveRight();
+        break;
+      case 40:
+        this.drop();
         break;
     }
   }
