@@ -35,32 +35,34 @@ export default class App extends React.Component {
   
   drop(){
     let positions = this.getPositions();
+    let canDrop = true;
     const newPositions = positions.map(position => {
-      return [position[0]+1, position[1]];
-    })
-    const tetris = this.state.tetris;
-    positions.forEach(position => {
-      tetris[position[0]].splice(position[1], 1, "00");
-    });
-    newPositions.forEach(position => {
-      if (tetris[position[0]+1][position[1]].slice(1) == "D"){
-        tetris[position[0]].splice(position[1], 1, this.state.blockType);
-        this.stopDrop();
-        return;
+      if (position[0] == 23){
+        canDrop = false;
       }
-      tetris[position[0]].splice(position[1], 1, this.state.blockType);
-    });
-    if (this.state.falling == true) this.setState({tetris});
+      if (position[0]<23){
+        if (this.state.tetris[position[0]+1][position[1]].slice(1) == "D"){
+          console.log("look out!");
+          canDrop = false;
+        }
+      }
+      if (canDrop){
+        return [position[0]+1, position[1]];
+      }
+    })
+    if (canDrop) this.updatePositions(positions, newPositions);
+    if (!canDrop) this.stopDrop();
   }
 
   stopDrop(){
     this.pause();
     let positions = this.getPositions();
     const tetris = this.state.tetris;
+    const newBlockType = this.state.blockType.slice(0,1)+"D";
     positions.forEach(position => {
-      const newBlockType = this.state.blockType.slice(0,1)+"D";
       tetris[position[0]].splice(position[1],1,newBlockType);
     })
+    this.setState({tetris});
     this.newBlock();
     this.go();
   }
@@ -91,13 +93,17 @@ export default class App extends React.Component {
       if (position[1] == 0) {
         canMoveLeft = false;
       }
-      if (position[1]>0 && canMoveLeft) {
+      if (position[1]>0){
+        if (this.state.tetris[position[0]][position[1]-1].slice(1) == "D"){
+          canMoveLeft = false;
+        }
+      }
+      if (canMoveLeft) {
         return [position[0], position[1]-1];
       }
     });
     if (canMoveLeft) this.updatePositions(positions, newPositions);
   }
-
   moveRight(){
     let positions = this.getPositions();
     let canMoveRight = true;
@@ -105,7 +111,12 @@ export default class App extends React.Component {
       if (position[1] == 9) {
         canMoveRight = false;
       }
-      if (position[1]<9 && canMoveRight) {
+      if (position[1]<9){
+        if (this.state.tetris[position[0]][position[1]+1].slice(1) == "D"){
+          canMoveRight = false;
+        }
+      }
+      if (canMoveRight) {
         return [position[0], position[1]+1];
       }
     });
@@ -117,6 +128,14 @@ export default class App extends React.Component {
     let canRotate = true;
     // do some magic here to figure out the new positions
     // possibly set canRotate to false, if needed
+  }
+
+  checkForLoss(){
+    for (let i=0; i<4; i++){
+      for (let j=0;j<10; j++){
+        if (this.state.tetris[i][j].splice(1) == "D") this.gameOver();
+      }
+    }
   }
 
   gameOver(){
