@@ -43,7 +43,6 @@ export default class App extends React.Component {
       tetris[position[0]].splice(position[1], 1, "00");
     });
     newPositions.forEach(position => {
-      console.log(position);
       if (tetris[position[0]+1][position[1]].slice(1) == "D"){
         tetris[position[0]].splice(position[1], 1, this.state.blockType);
         this.stopDrop();
@@ -62,17 +61,16 @@ export default class App extends React.Component {
       const newBlockType = this.state.blockType.slice(0,1)+"D";
       tetris[position[0]].splice(position[1],1,newBlockType);
     })
-    // this.newBlock();
-    // this.go();
+    this.newBlock();
+    this.go();
   }
 
   newBlock(){
     const newBlock = blocks[Math.floor(Math.random()*7)];
-    const tetris = this.state.tetris;
-    tetris.splice(0,4);
-    const newTetris = newBlock.concat(tetris);
-    console.log(newTetris);
-    this.setState({tetris: newTetris});
+    const blockTypes = ["1F", "2F", "3F"];
+    const blockType = blockTypes[Math.floor(Math.random()*3)];
+    this.setState({blockType});
+    this.updatePositions([], newBlock);
   }
 
   updatePositions(oldPositions, newPositions){
