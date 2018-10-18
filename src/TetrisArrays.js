@@ -33,7 +33,7 @@ export const startingArray = [
     ["00", "00", "00", "00", "00", "00", "00", "00", "00", "00"],
     ["0D", "0D", "0D", "0D", "0D", "0D", "0D", "0D", "0D", "0D"]
   ];
-  
+
   export const line = [
     ["00", "00", "00", "00", "0F", "00", "00", "00", "00", "00"],
     ["00", "00", "00", "00", "0F", "00", "00", "00", "00", "00"],
@@ -83,3 +83,4 @@ export const startingArray = [
     ["00", "00", "00", "00", "00", "00", "00", "00", "00", "00"]
   ];
   
+  export const blocks = [line, rightL, leftL, leftZigzag, rightZigzag, t, square];
